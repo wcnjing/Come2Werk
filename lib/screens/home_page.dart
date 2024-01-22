@@ -12,19 +12,43 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('HomePage'),),
-      body: Center(
-        child: Text('Welcome back, Jeremy Chan!',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 30, fontWeight: FontWeight.bold
-          ),
-        ),
-      ),
+    final welcomeback = Text("Welcome Back, Jeremy Chan!",
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+    ),);
 
-    );
+
+
+    return Scaffold(
+    body: Center(
+          child:SingleChildScrollView(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(36.0),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height:200,
+                    child: Image.asset("assets/profilepic.png",
+                    fit:BoxFit.contain,)
+                  ),
+                  SizedBox(height:50),
+                  welcomeback,
+
+                ],
+
+              ),
+              ),
+            ),
+          ),
+          ),
+      );
   }
-}
+
+
+  }
+
 
 
