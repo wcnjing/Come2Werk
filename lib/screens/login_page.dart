@@ -1,3 +1,4 @@
+import 'package:come2werk_flutter/screens/home_page.dart';
 import 'package:flutter/material.dart';
 
 
@@ -70,7 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
             child: MaterialButton(
               padding: EdgeInsets.fromLTRB(20,15,20,15),
               minWidth: MediaQuery.of(context).size.width,
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+              },
               child: Text("Login",
                   textAlign: TextAlign.center,
                   style: TextStyle(

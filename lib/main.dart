@@ -1,3 +1,4 @@
+import 'package:come2werk_flutter/screens/home_page.dart';
 import 'package:come2werk_flutter/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: LoginScreen(),
+    );
+  }
+  @override
+  Widget hScreen(BuildContext context){
+    return MaterialApp(
+      title: 'Home Page',
+      home: HomeScreen(),
     );
   }
 }
