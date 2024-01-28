@@ -3,6 +3,12 @@
         android:label="come2werk_flutter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!--Permissions for Bluetooth access-->
+        <uses-permission android:name="android.permission.BLUETOOTH" />
+        <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
