@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BlueScreen extends StatelessWidget {
+class DestinationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
