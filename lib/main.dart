@@ -1,6 +1,7 @@
 import 'package:come2werk_flutter/screens/home_page.dart';
 import 'package:come2werk_flutter/screens/login_page.dart';
 import 'package:come2werk_flutter/screens/MyBluetoothPage.dart';
+import 'package:come2werk_flutter/screens/MyAttendancePage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,6 +33,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bluetooth Page',
       home: BlueScreen(),
+    );
+  }
+
+  @override
+  Widget aScreen(BuildContext context){
+    return MaterialApp(
+      title: 'Attendance Page',
+      home: AttendanceScreen(),
     );
   }
 }

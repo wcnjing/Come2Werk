@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class BlueScreen extends StatelessWidget {
+class AttendanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Destination Page'),
+        title: Text('Attendance'),
       ),
       body: Center(
         child: Text('This is the destination page!'),
