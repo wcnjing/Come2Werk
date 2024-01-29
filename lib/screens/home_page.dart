@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height:50),
                 welcomeback,
-                ElevatedCardExample(),
-                ElevatedCardExample()
+                ConnectionsButton(),
+                AttendanceButton()
 
 
               ],
@@ -51,8 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 }
 }
-class ElevatedCardExample extends StatelessWidget {
-  const ElevatedCardExample({super.key});
+class ConnectionsButton extends StatelessWidget {
+  const ConnectionsButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,23 @@ class ElevatedCardExample extends StatelessWidget {
         child: SizedBox(
           width: 300,
           height: 100,
-          child: Center(child: Text('Elevated Card')),
+          child: Center(child: Text('Connections')),
+        ),
+      ),
+    );
+  }
+}
+class AttendanceButton extends StatelessWidget {
+  const AttendanceButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Card(
+        child: SizedBox(
+          width: 300,
+          height: 100,
+          child: Center(child: Text('Attendance')),
         ),
       ),
     );
