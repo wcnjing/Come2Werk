@@ -1,3 +1,4 @@
+import 'package:come2werk_flutter/screens/MyBluetoothPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,40 @@ class _HomeScreenState extends State<HomeScreen> {
         fontSize: 30,
         fontWeight: FontWeight.bold,
       ),);
-
+    final connectionsButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      color: Colors.blueAccent,
+      child: MaterialButton(
+        padding: EdgeInsets.fromLTRB(20,15,20,15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BlueScreen()));
+        },
+        child: Text("Connections",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+    final AttendanceButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(30),
+      color: Colors.blueAccent,
+      child: MaterialButton(
+        padding: EdgeInsets.fromLTRB(20,15,20,15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        },
+        child: Text("Attendance",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
 
 
 
@@ -37,8 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height:50),
                 welcomeback,
-                ConnectionsButton(),
-                AttendanceButton()
+                SizedBox(height:50),
+                connectionsButton,
+               SizedBox(height:25),
+                AttendanceButton,
 
 
               ],
@@ -51,38 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 }
 }
-class ConnectionsButton extends StatelessWidget {
-  const ConnectionsButton({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Card(
-        child: SizedBox(
-          width: 1000,
-          height: 50,
-          child: Center(child: Text('Connections')),
-        ),
-      ),
-    );
-  }
-}
-class AttendanceButton extends StatelessWidget {
-  const AttendanceButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Card(
-        child: SizedBox(
-          width: 1000,
-          height: 50,
-          child: Center(child: Text('Attendance')),
-        ),
-      ),
-    );
-  }
-}
 
 
 
