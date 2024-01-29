@@ -12,40 +12,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final welcomeback = Text("Welcome Back, Jeremy Chan!",
-    textAlign: TextAlign.center,
-    style: TextStyle(
-      fontSize: 30,
-      fontWeight: FontWeight.bold,
-    ),);
+    return MaterialApp(
+      theme: ThemeData(
+          colorSchemeSeed: const Color(0xff6750a4), useMaterial3: true),
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Divider Sample')),
+        body: const DividerExample(),
+      ),
+    );
+  }
+}
 
+class DividerExample extends StatelessWidget {
+  const DividerExample({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
 
-    return Scaffold(
-    body: Center(
-          child:SingleChildScrollView(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(36.0),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height:200,
-                    child: Image.asset("assets/profilepic.png",
-                    fit:BoxFit.contain,)
-                  ),
-                  SizedBox(height:50),
-                  welcomeback,
+            Expanded(
+              child: Card(
 
-                ],
-
-              ),
               ),
             ),
-          ),
-          ),
-      );
+            Divider(),
+            Expanded(
+              child: Card(
+                child: SizedBox.expand(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
+
 
 
   }
