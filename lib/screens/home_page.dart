@@ -1,5 +1,7 @@
+import 'package:come2werk_flutter/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:come2werk_flutter/screens/MyBluetoothPage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,12 +58,20 @@ class ConnectionsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Card(
-        child: SizedBox(
-          width: 1000,
-          height: 50,
-          child: Center(child: Text('Connections')),
+    return Center(
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BlueScreen()),
+          );
+        },
+        child: Card(
+          child: SizedBox(
+            width: 1000,
+            height: 50,
+            child: Center(child: Text('Connections')),
+          ),
         ),
       ),
     );
