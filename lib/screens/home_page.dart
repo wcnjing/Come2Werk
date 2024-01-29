@@ -59,8 +59,8 @@ class ConnectionsButton extends StatelessWidget {
     return const Center(
       child: Card(
         child: SizedBox(
-          width: 300,
-          height: 100,
+          width: 1000,
+          height: 50,
           child: Center(child: Text('Connections')),
         ),
       ),
@@ -75,8 +75,8 @@ class AttendanceButton extends StatelessWidget {
     return const Center(
       child: Card(
         child: SizedBox(
-          width: 300,
-          height: 100,
+          width: 1000,
+          height: 50,
           child: Center(child: Text('Attendance')),
         ),
       ),
