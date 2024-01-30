@@ -5,7 +5,7 @@ class BlueScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Destination Page'),
+        title: Text('Connections'),
       ),
       body: Center(
         child: Text('This is the destination page!'),
