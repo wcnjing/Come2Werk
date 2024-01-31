@@ -67,9 +67,20 @@ class ConnectionsButton extends StatelessWidget {
         },
         child: Card(
           child: Container(
+            padding: EdgeInsets.all(8.0), // Added padding for spacing
             width: 1000,
             height: 50,
-            child: Center(child: Text('Connections')),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.bluetooth,
+                  color: Colors.blue, // You can customize the color
+                ),
+                SizedBox(width: 8.0), // Added space between icon and text
+                Text('Connections'),
+              ],
+            ),
           ),
         ),
       ),
@@ -92,15 +103,27 @@ class AttendanceButton extends StatelessWidget {
         },
         child: Card(
           child: Container(
+            padding: EdgeInsets.all(8.0), // Added padding for spacing
             width: 1000,
             height: 50,
-            child: Center(child: Text('Attendance')),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  color: Colors.green, // You can customize the color
+                ),
+                SizedBox(width: 8.0), // Added space between icon and text
+                Text('Attendance'),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 class SignOutButton extends StatelessWidget {
   const SignOutButton({Key? key}) : super(key: key);
