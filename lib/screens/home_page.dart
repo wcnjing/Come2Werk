@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 welcomeBack,
                 ConnectionsButton(),
                 AttendanceButton(),
-                SizedBox(height: 20), // Added space between buttons and sign out button
+                SizedBox(height: 150), // Added space between buttons and sign out button
                 SignOutButton(),
               ],
             ),
@@ -136,9 +136,9 @@ class SignOutButton extends StatelessWidget {
           // Add sign-out logic here
         },
         style: ElevatedButton.styleFrom(
-          primary: Colors.red, // Set button color to red
+          primary: Colors.white, // Set button color to red
         ),
-        child: Text('Sign Out', style: TextStyle(color: Colors.white)),
+        child: Text('Sign Out', style: TextStyle(color: Colors.redAccent)),
       ),
     );
   }
