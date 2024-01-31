@@ -1,3 +1,4 @@
+import 'package:come2werk_flutter/screens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:come2werk_flutter/screens/MyBluetoothPage.dart';
 import 'package:come2werk_flutter/screens/MyAttendancePage.dart';
@@ -133,6 +134,10 @@ class SignOutButton extends StatelessWidget {
     return Center(
       child: ElevatedButton(
         onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
           // Add sign-out logic here
         },
         style: ElevatedButton.styleFrom(
