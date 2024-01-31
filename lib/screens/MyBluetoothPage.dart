@@ -1,92 +1,166 @@
+import 'package:bluetooth_classic/models/device.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'dart:typed_data';
+import 'dart:async';
+
+import 'package:flutter/services.dart';
+import 'package:bluetooth_classic/bluetooth_classic.dart';
+
+void main() {
+  runApp(const BlueScreen());
+}
 
 class BlueScreen extends StatefulWidget {
   const BlueScreen({Key? key}) : super(key: key);
 
   @override
-  _BlueScreenState createState() => _BlueScreenState();
+  State<BlueScreen> createState() => _BlueScreenState();
 }
 
 class _BlueScreenState extends State<BlueScreen> {
-  FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
-  List<BluetoothDiscoveryResult> _devices = [];
-
+  String _platformVersion = 'Unknown';
+  final _bluetoothClassicPlugin = BluetoothClassic();
+  List<Device> _devices = [];
+  List<Device> _discoveredDevices = [];
+  bool _scanning = false;
+  int _deviceStatus = Device.disconnected;
+  Uint8List _data = Uint8List(0);
   @override
   void initState() {
     super.initState();
-    _initBluetooth();
-  }
-
-  Future<void> _initBluetooth() async {
-    await FlutterBluetoothSerial.instance.requestEnable();
-    _startScan();
-  }
-
-  Future<void> _startScan() async {
-    setState(() {
-      _devices.clear(); // Clear existing devices before starting a new scan
-    });
-    _bluetooth.startDiscovery().listen((device) {
+    initPlatformState();
+    _bluetoothClassicPlugin.onDeviceStatusChanged().listen((event) {
       setState(() {
-        _devices.add(device);
+        _deviceStatus = event;
+      });
+    });
+    _bluetoothClassicPlugin.onDeviceDataReceived().listen((event) {
+      setState(() {
+        _data = Uint8List.fromList([..._data, ...event]);
       });
     });
   }
 
-  Future<void> _connectToDevice(BluetoothDiscoveryResult device) async {
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String platformVersion;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    // We also handle the message potentially returning null.
     try {
-      BluetoothConnection connection = await BluetoothConnection.toAddress(device.device.address);
-      print('Connected to ${device.device.name}');
-      // Now you can send or listen for data using _sendDataFromBluetooth or _listenForData functions
-    } catch (e) {
-      print('Error connecting to ${device.device.name}: $e');
+      platformVersion = await _bluetoothClassicPlugin.getPlatformVersion() ??
+          'Unknown platform version';
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
     }
-  }
 
-  void _sendDataFromBluetooth(BluetoothConnection connection, String myData) async {
-    connection.output.add(Uint8List.fromList(myData.codeUnits));
-    await connection.output.allSent;
-  }
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
 
-  void _listenForData(BluetoothConnection connection) {
-    connection.input?.listen((data) {
-      String text = String.fromCharCodes(data);
-      print('Received data: $text');
-    }).onDone(() {
-      print('Connection closed');
+    setState(() {
+      _platformVersion = platformVersion;
     });
+  }
+
+  Future<void> _getDevices() async {
+    var res = await _bluetoothClassicPlugin.getPairedDevices();
+    setState(() {
+      _devices = res;
+    });
+  }
+
+  Future<void> _scan() async {
+    if (_scanning) {
+      await _bluetoothClassicPlugin.stopScan();
+      setState(() {
+        _scanning = false;
+      });
+    } else {
+      await _bluetoothClassicPlugin.startScan();
+      _bluetoothClassicPlugin.onDeviceDiscovered().listen(
+            (event) {
+          setState(() {
+            _discoveredDevices = [..._discoveredDevices, event];
+          });
+        },
+      );
+      setState(() {
+        _scanning = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Bluetooth Flutter App'),
-      ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: _startScan,
-            child: Text('Scan for Devices'),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text("Device status is $_deviceStatus"),
+              TextButton(
+                onPressed: () async {
+                  await _bluetoothClassicPlugin.initPermissions();
+                },
+                child: const Text("Check Permissions"),
+              ),
+              TextButton(
+                onPressed: _getDevices,
+                child: const Text("Get Paired Devices"),
+              ),
+              TextButton(
+                onPressed: _deviceStatus == Device.connected
+                    ? () async {
+                  await _bluetoothClassicPlugin.disconnect();
+                }
+                    : null,
+                child: const Text("disconnect"),
+              ),
+              TextButton(
+                onPressed: _deviceStatus == Device.connected
+                    ? () async {
+                  await _bluetoothClassicPlugin.write("ping");
+                }
+                    : null,
+                child: const Text("send ping"),
+              ),
+              Center(
+                child: Text('Running on: $_platformVersion\n'),
+              ),
+              ...[
+                for (var device in _devices)
+                  TextButton(
+                      onPressed: () async {
+                        await _bluetoothClassicPlugin.connect(device.address,
+                            "00001101-0000-1000-8000-00805f9b34fb");
+                        setState(() {
+                          _discoveredDevices = [];
+                          _devices = [];
+                        });
+                      },
+                      child: Text(device.name ?? device.address))
+              ],
+              TextButton(
+                onPressed: _scan,
+                child: Text(_scanning ? "Stop Scan" : "Start Scan"),
+              ),
+              ...[
+                for (var device in _discoveredDevices)
+                  Text(device.name ?? device.address)
+              ],
+              Text("Received data: ${String.fromCharCodes(_data)}"),
+            ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _devices.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(_devices[index].device.name ?? 'Unknown Device'),
-                  onTap: () => _connectToDevice(_devices[index]),
-                );
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
+
+
 
 
 //  @override
