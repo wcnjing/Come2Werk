@@ -1,60 +1,59 @@
-import 'package:come2werk_flutter/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:come2werk_flutter/screens/MyBluetoothPage.dart';
 import 'package:come2werk_flutter/screens/MyAttendancePage.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final welcomeback = Text("Welcome Back, Jeremy Chan!",
+    final welcomeBack = Text(
+      "Welcome Back, Jeremy Chan!",
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 30,
         fontWeight: FontWeight.bold,
-      ),);
+      ),
+    );
 
-
-
-    return Scaffold(body: Center(
-      child:SingleChildScrollView(
-        child: Container(
-          child: Padding(
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
             padding: const EdgeInsets.all(36.0),
             child: Column(
               children: <Widget>[
-
-                SizedBox(
-                    height:200,
-                    child: Image.asset("assets/profilepic.png",
-                      fit:BoxFit.contain,)
+                Container(
+                  height: 200,
+                  child: Image.asset(
+                    "assets/profilepic.png",
+                    fit: BoxFit.contain,
+                  ),
                 ),
-                SizedBox(height:50),
-                welcomeback,
+                SizedBox(height: 50),
+                welcomeBack,
                 ConnectionsButton(),
-                AttendanceButton()
-
-
+                AttendanceButton(),
+                SizedBox(height: 20), // Added space between buttons and sign out button
+                SignOutButton(),
               ],
-
             ),
           ),
         ),
       ),
-    ),
     );
+  }
 }
-}
+
 class ConnectionsButton extends StatelessWidget {
-  const ConnectionsButton({super.key});
+  const ConnectionsButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +66,7 @@ class ConnectionsButton extends StatelessWidget {
           );
         },
         child: Card(
-          child: SizedBox(
+          child: Container(
             width: 1000,
             height: 50,
             child: Center(child: Text('Connections')),
@@ -77,8 +76,9 @@ class ConnectionsButton extends StatelessWidget {
     );
   }
 }
+
 class AttendanceButton extends StatelessWidget {
-  const AttendanceButton({super.key});
+  const AttendanceButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class AttendanceButton extends StatelessWidget {
           );
         },
         child: Card(
-          child: SizedBox(
+          child: Container(
             width: 1000,
             height: 50,
             child: Center(child: Text('Attendance')),
@@ -101,6 +101,26 @@ class AttendanceButton extends StatelessWidget {
     );
   }
 }
+
+class SignOutButton extends StatelessWidget {
+  const SignOutButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          // Add sign-out logic here
+        },
+        style: ElevatedButton.styleFrom(
+          primary: Colors.red, // Set button color to red
+        ),
+        child: Text('Sign Out', style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+}
+
 
 
 
