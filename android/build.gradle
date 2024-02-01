@@ -30,9 +30,19 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(':app')
 }
+
 android {
-    compileSdkVersion 31 // or the appropriate SDK version you intend to use
-    // Other configuration options...
+    compileSdkVersion 31
+    // Other configurations...
+    sourceSets {
+        main {
+            manifest.srcFile 'app/src/main/AndroidManifest.xml'
+            // Other source set configurations...
+        }
+        // Other source sets...
+    }
+    namespace 'com.example.come2werk_flutter'
 }
+
 
 
