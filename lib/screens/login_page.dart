@@ -1,19 +1,10 @@
 import 'package:come2werk_flutter/screens/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import 'auth.dart';
 
 
 class LoginScreen extends StatefulWidget {
 
-  LoginScreen({ Key? key}) : super(key: key);
-
-  final User? user = Auth().currentUser;
-
-  Future<void> signOut() async {
-    await Auth().signOut();
-}
+  const LoginScreen({ Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
