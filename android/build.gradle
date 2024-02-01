@@ -1,3 +1,4 @@
+
 buildscript {
     ext.kotlin_version = '1.7.10'
     repositories {
@@ -11,10 +12,13 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+plugins {
+    // ...
 
-apply plugin: 'com.android.application'  // Apply Android application plugin
-apply plugin: 'kotlin-android'  // Apply Kotlin Android plugin
-apply plugin: 'com.google.gms.google-services'  // Apply Google services plugin
+    // Add the dependency for the Google services Gradle plugin
+    id("com.google.gms.google-services") version "4.4.0" apply false
+
+}
 
 allprojects {
     repositories {
@@ -31,18 +35,6 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-android {
-    compileSdkVersion 31
-    // Other configurations...
-    sourceSets {
-        main {
-            manifest.srcFile 'app/src/main/AndroidManifest.xml'
-            // Other source set configurations...
-        }
-        // Other source sets...
-    }
-    namespace 'com.example.come2werk_flutter'
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
 }
-
-
-
