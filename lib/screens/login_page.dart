@@ -65,12 +65,12 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: true,
 
           validator: (value){
-            RegExp regex = new RegExp("^(?=.*\d).{4,8}");
+            RegExp regex = new RegExp(r'^.{6,}$');
             if (value!.isEmpty){
               return ("Password is required for login");
             }
             if(!regex.hasMatch(value)){
-              return("Must be 8 characters with letters and numbers");
+              return("Please enter a valid password (Min. 6 characters");
             }
           },
           onSaved: (value)
