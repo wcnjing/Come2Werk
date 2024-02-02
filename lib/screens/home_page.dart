@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final welcomeBack = Text(
-      "Welcome Back, Jeremy Chan!",
+      "Welcome Back",
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 30,

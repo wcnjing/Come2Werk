@@ -11,6 +11,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   late DateTime _focusedDay;
   late DateTime _firstDay;
   late DateTime _lastDay;
+  Set<DateTime> _highlightedDates = {}; // Set to store highlighted dates
 
   @override
   void initState() {
@@ -34,8 +35,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             lastDay: _lastDay,
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) {
-              // Return true if the day is selected
-              return isSameDay(_selectedDate, day);
+              // Return true if the day is selected or highlighted
+              return isSameDay(_selectedDate, day) || _highlightedDates.contains(day);
             },
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
@@ -43,6 +44,12 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 _focusedDay = focusedDay; // Update focused day as well
               });
             },
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: Colors.red, // Highlight color
+                shape: BoxShape.circle,
+              ),
+            ),
           ),
           SizedBox(height: 20),
           Center(
@@ -50,6 +57,21 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               'Selected Date: ${_selectedDate.toLocal()}',
               style: TextStyle(fontSize: 18),
             ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              // Handle button press to highlight selected date
+              setState(() {
+                // Toggle highlighting of selected date
+                if (_highlightedDates.contains(_selectedDate)) {
+                  _highlightedDates.remove(_selectedDate);
+                } else {
+                  _highlightedDates.add(_selectedDate);
+                }
+              });
+            },
+            child: Text('Check In'),
           ),
         ],
       ),
@@ -60,4 +82,5 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 }
+
 
