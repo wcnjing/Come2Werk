@@ -61,15 +61,37 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              // Handle button press to highlight selected date
-              setState(() {
-                // Toggle highlighting of selected date
-                if (_highlightedDates.contains(_selectedDate)) {
-                  _highlightedDates.remove(_selectedDate);
-                } else {
-                  _highlightedDates.add(_selectedDate);
-                }
-              });
+              // Check if today's date is selected before allowing check-in
+              if (isSameDay(_selectedDate, DateTime.now())) {
+                // Handle button press to highlight selected date
+                setState(() {
+                  // Toggle highlighting of selected date
+                  if (_highlightedDates.contains(_selectedDate)) {
+                    _highlightedDates.remove(_selectedDate);
+                  } else {
+                    _highlightedDates.add(_selectedDate);
+                  }
+                });
+              } else {
+                // Display a message or take appropriate action for invalid date
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Invalid Date'),
+                      content: Text('You can only check in on today\'s date.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
             child: Text('Check In'),
           ),
@@ -81,9 +103,18 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Center(
-                child: Text(
-                  'Highlighted Days Count: ${countHighlightedDays()}',
-                  style: TextStyle(fontSize: 18),
+                child: Column(
+                  children: [
+                    Text(
+                      'Days clocked in: ${countHighlightedDays()}',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Days absent: ${countNonHighlightedDays()}',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -109,7 +140,16 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     }
     return count;
   }
+
+  int countNonHighlightedDays() {
+    DateTime firstDayOfMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
+    int count = -1;
+
+    for (DateTime date = firstDayOfMonth; date.isBefore(DateTime.now()); date = date.add(Duration(days: 1))) {
+      if (!_highlightedDates.contains(date)) {
+        count++;
+      }
+    }
+    return count;
+  }
 }
-
-
-
