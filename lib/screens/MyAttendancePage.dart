@@ -41,27 +41,34 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     super.initState();
     _selectedDate = DateTime.now();
     _focusedDay = DateTime.now();
-    _firstDay = DateTime.now().subtract(Duration(days: 30)); // Adjust as needed
-    _lastDay = DateTime.now().add(Duration(days: 30)); // Adjust as needed
+    _firstDay = DateTime.now().subtract(Duration(days: 30));
+    _lastDay = DateTime.now().add(Duration(days: 30));
 
     DatabaseReference _testRef = FirebaseDatabase.instance.ref().child('Attendance');
     _testRef.onValue.listen((event) {
       try {
         DataSnapshot dataSnapshot = event.snapshot;
-        Map<String, dynamic>? data = dataSnapshot.value as Map<String, dynamic>?;
 
-        if (data != null) {
-          Set<DateTime> highlightedDates = data.entries
-              .where((entry) =>
-          entry.value is Map &&
-              entry.value.containsKey('checkIn') &&
-              entry.value['checkIn'] == true)
-              .map((entry) => DateTime.parse(entry.key))
-              .toSet();
+        // Check if the data is not null and is of Map type
+        if (dataSnapshot.value is Map<dynamic, dynamic>?) {
+          // Use the null-aware operator to handle nullability
+          Map<dynamic, dynamic>? data = dataSnapshot.value as Map<dynamic, dynamic>?;
 
-          setState(() {
-            _highlightedDates = highlightedDates;
-          });
+          if (data != null) {
+            Set<DateTime> highlightedDates = data.entries
+                .where((entry) =>
+            entry.value is Map &&
+                entry.value.containsKey('checkIn') &&
+                entry.value['checkIn'] == true)
+                .map((entry) => DateTime.parse(entry.key))
+                .toSet();
+
+            setState(() {
+              _highlightedDates = highlightedDates;
+            });
+          }
+        } else {
+          print('Invalid data format received from Firebase.');
         }
       } catch (e) {
         print('Error loading data from Firebase: $e');
@@ -192,7 +199,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   int countNonHighlightedDays() {
     DateTime firstDayOfMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
-    int count = -1;
+    int count = 0;
 
     for (DateTime date = firstDayOfMonth; date.isBefore(DateTime.now()); date = date.add(Duration(days: 1))) {
       if (!_highlightedDates.contains(date)) {
