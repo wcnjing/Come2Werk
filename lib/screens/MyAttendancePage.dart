@@ -44,13 +44,32 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     _firstDay = DateTime.now().subtract(Duration(days: 30)); // Adjust as needed
     _lastDay = DateTime.now().add(Duration(days: 30)); // Adjust as needed
 
-    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child('counts');
+    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child('Attendance');
     _testRef.onValue.listen((event) {
-      setState(() {
-        realTimeValue = event.snapshot.value.toString();
-      });
+      try {
+        DataSnapshot dataSnapshot = event.snapshot;
+        Map<String, dynamic>? data = dataSnapshot.value as Map<String, dynamic>?;
+
+        if (data != null) {
+          Set<DateTime> highlightedDates = data.entries
+              .where((entry) =>
+          entry.value is Map &&
+              entry.value.containsKey('checkIn') &&
+              entry.value['checkIn'] == true)
+              .map((entry) => DateTime.parse(entry.key))
+              .toSet();
+
+          setState(() {
+            _highlightedDates = highlightedDates;
+          });
+        }
+      } catch (e) {
+        print('Error loading data from Firebase: $e');
+      }
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
