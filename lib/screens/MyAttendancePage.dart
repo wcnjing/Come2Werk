@@ -82,7 +82,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               padding: EdgeInsets.all(16),
               child: Center(
                 child: Text(
-                  'Highlighted Days Count: ${countHighlightedDays()}',
+                  'Days Checked In: ${countHighlightedDays()}',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
