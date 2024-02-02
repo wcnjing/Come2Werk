@@ -34,8 +34,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   late DateTime _lastDay;
   Set<DateTime> _highlightedDates = {}; // Set to store highlighted dates
 
-  String realTimeValue = '';
-
   @override
   void initState() {
     super.initState();
@@ -75,8 +73,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       }
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,26 +115,22 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             onPressed: () {
               // Check if today's date is selected before allowing check-in
               if (isSameDay(_selectedDate, DateTime.now())) {
-                // Handle button press to highlight selected date
-                setState(() {
-                  // Toggle highlighting of selected date
-                  if (_highlightedDates.contains(_selectedDate)) {
-                    _highlightedDates.remove(_selectedDate);
-                  } else {
-                    _highlightedDates.add(_selectedDate);
-                  }
-                });
-
-                // Get the current date
-                String currentDate = DateTime.now().toString().split(' ')[0];
-
-                // Get a reference to the 'Attendance' node in the real-time database
                 DatabaseReference _attendanceRef = FirebaseDatabase.instance.ref().child('Attendance');
+                _attendanceRef.child(_selectedDate.toString().split(' ')[0]).once().then((snapshot) {
+                  if (snapshot != null && snapshot.snapshot.value != null && (snapshot.snapshot.value as Map)['checkIn'] == true) {
 
-                // Insert the current date with 'checkIn' set to true
-                _attendanceRef.child(currentDate).set({'checkIn': true})
-                    .then((value) => print('Checked in on $currentDate'))
-                    .catchError((error) => print('Failed to check in: $error'));
+                    // If the date is already checked in, remove it from both local set and Firebase
+                    _highlightedDates.remove(_selectedDate);
+                    _attendanceRef.child(_selectedDate.toString().split(' ')[0]).remove();
+                  } else {
+                    // Toggle highlighting of selected date
+                    _highlightedDates.add(_selectedDate);
+                    // Add or update the check-in status in Firebase
+                    _attendanceRef.child(_selectedDate.toString().split(' ')[0]).set({'checkIn': true});
+                  }
+                }).catchError((error) {
+                  print('Failed to check attendance: $error');
+                });
               } else {
                 // Display a message or take appropriate action for invalid date
                 showDialog(
@@ -210,7 +202,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   int countNonHighlightedDays() {
     DateTime firstDayOfMonth = DateTime(DateTime.now().year, DateTime.now().month, 1);
-    int count = 0;
+    int count = -1;
 
     for (DateTime date = firstDayOfMonth; date.isBefore(DateTime.now()); date = date.add(Duration(days: 1))) {
       if (!_highlightedDates.contains(date)) {
