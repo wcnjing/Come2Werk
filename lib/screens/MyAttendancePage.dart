@@ -110,7 +110,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           SizedBox(height: 20),
           Center(
             child: Text(
-              'Selected Date: $realTimeValue',
+              'Selected Date: ${_selectedDate.toString().split(' ')[0]}', // Display date in 'YYYY-MM-DD' format
               style: TextStyle(fontSize: 18),
             ),
           ),
@@ -128,6 +128,17 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                     _highlightedDates.add(_selectedDate);
                   }
                 });
+
+                // Get the current date
+                String currentDate = DateTime.now().toString().split(' ')[0];
+
+                // Get a reference to the 'Attendance' node in the real-time database
+                DatabaseReference _attendanceRef = FirebaseDatabase.instance.ref().child('Attendance');
+
+                // Insert the current date with 'checkIn' set to true
+                _attendanceRef.child(currentDate).set({'checkIn': true})
+                    .then((value) => print('Checked in on $currentDate'))
+                    .catchError((error) => print('Failed to check in: $error'));
               } else {
                 // Display a message or take appropriate action for invalid date
                 showDialog(
