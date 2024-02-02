@@ -73,6 +73,21 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             },
             child: Text('Check In'),
           ),
+          SizedBox(height: 20),
+          Card(
+            elevation: 4,
+            margin: EdgeInsets.symmetric(horizontal: 16), // Adjust margin as needed
+            color: Colors.white, // Set background color to white
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(
+                child: Text(
+                  'Highlighted Days Count: ${countHighlightedDays()}',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -81,6 +96,20 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   bool isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+
+  int countHighlightedDays() {
+    DateTime startDate = DateTime.now().subtract(Duration(days: 30));
+    DateTime endDate = DateTime.now().add(Duration(days: 30));
+
+    int count = 0;
+    for (DateTime date in _highlightedDates) {
+      if (date.isAfter(startDate) && date.isBefore(endDate)) {
+        count++;
+      }
+    }
+    return count;
+  }
 }
+
 
 
