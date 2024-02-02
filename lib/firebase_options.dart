@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -43,21 +46,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD2WyNkAPOj7ukAQIHSbTIUS-1UTlQNpAs',
-    appId: '1:213395130394:web:5392e8d52417e3e338e9a3',
-    messagingSenderId: '213395130394',
-    projectId: 'come2werkauth-1bedc',
-    authDomain: 'come2werkauth-1bedc.firebaseapp.com',
-    storageBucket: 'come2werkauth-1bedc.appspot.com',
-    measurementId: 'G-QYBP64LNSG',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBOgw6D4nq7AE3ZmAVu8TkjJ8AgvgHdDsM',
     appId: '1:213395130394:android:dc17b57a6fc3063938e9a3',
     messagingSenderId: '213395130394',
     projectId: 'come2werkauth-1bedc',
+    databaseURL: 'https://come2werkauth-1bedc-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'come2werkauth-1bedc.appspot.com',
   );
 
@@ -66,6 +60,7 @@ class DefaultFirebaseOptions {
     appId: '1:213395130394:ios:d4093290e1531ffb38e9a3',
     messagingSenderId: '213395130394',
     projectId: 'come2werkauth-1bedc',
+    databaseURL: 'https://come2werkauth-1bedc-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'come2werkauth-1bedc.appspot.com',
     iosBundleId: 'com.example.come2werkFlutter',
   );
@@ -75,6 +70,7 @@ class DefaultFirebaseOptions {
     appId: '1:213395130394:ios:92a6733c4126ad1b38e9a3',
     messagingSenderId: '213395130394',
     projectId: 'come2werkauth-1bedc',
+    databaseURL: 'https://come2werkauth-1bedc-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'come2werkauth-1bedc.appspot.com',
     iosBundleId: 'com.example.come2werkFlutter.RunnerTests',
   );

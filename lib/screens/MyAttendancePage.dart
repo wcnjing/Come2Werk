@@ -1,5 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Attendance App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: AttendanceScreen(),
+    );
+  }
+}
 
 class AttendanceScreen extends StatefulWidget {
   @override
@@ -13,6 +34,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   late DateTime _lastDay;
   Set<DateTime> _highlightedDates = {}; // Set to store highlighted dates
 
+  String realTimeValue = '';
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +43,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     _focusedDay = DateTime.now();
     _firstDay = DateTime.now().subtract(Duration(days: 30)); // Adjust as needed
     _lastDay = DateTime.now().add(Duration(days: 30)); // Adjust as needed
+
+    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child('counts');
+    _testRef.onValue.listen((event) {
+      setState(() {
+        realTimeValue = event.snapshot.value.toString();
+      });
+    });
   }
 
   @override
@@ -54,7 +84,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           SizedBox(height: 20),
           Center(
             child: Text(
-              'Selected Date: ${_selectedDate.toLocal()}',
+              'Selected Date: $realTimeValue',
               style: TextStyle(fontSize: 18),
             ),
           ),
