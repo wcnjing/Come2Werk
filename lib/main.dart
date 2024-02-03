@@ -12,12 +12,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
 
   // This widget is the root of your application.
   @override
@@ -27,19 +25,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: LoginScreen(),
     );
   }
   @override
   Widget hScreen(BuildContext context){
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Home Page',
       home: HomeScreen(),
     );
   }
   @override
   Widget bScreen(BuildContext context){
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Bluetooth Page',
       home: BlueScreen(),
     );

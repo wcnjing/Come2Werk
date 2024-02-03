@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
 
-  const LoginScreen({ super.key});
+  const LoginScreen({ Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -18,8 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //editing controller
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController passwordController = new TextEditingController();
 
   //firebase
   final _auth = FirebaseAuth.instance;
@@ -49,8 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.mail),
-        contentPadding: const EdgeInsets.fromLTRB(20,15,20,15),
+        prefixIcon: Icon(Icons.mail),
+        contentPadding: EdgeInsets.fromLTRB(20,15,20,15),
         hintText: "Email",
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -65,14 +65,13 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: true,
 
           validator: (value){
-            RegExp regex = RegExp(r'^.{6,}$');
+            RegExp regex = new RegExp(r'^.{6,}$');
             if (value!.isEmpty){
               return ("Password is required for login");
             }
             if(!regex.hasMatch(value)){
               return("Please enter a valid password (Min. 6 characters)");
             }
-            return null;
           },
           onSaved: (value)
           {
@@ -80,8 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           textInputAction: TextInputAction.done,
           decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.vpn_key),
-                  contentPadding: const EdgeInsets.fromLTRB(20,15,20,15),
+                  prefixIcon: Icon(Icons.vpn_key),
+                  contentPadding: EdgeInsets.fromLTRB(20,15,20,15),
                   hintText: "Password",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -93,12 +92,12 @@ class _LoginScreenState extends State<LoginScreen> {
             borderRadius: BorderRadius.circular(30),
             color: Colors.blueAccent,
             child: MaterialButton(
-              padding: const EdgeInsets.fromLTRB(20,15,20,15),
+              padding: EdgeInsets.fromLTRB(20,15,20,15),
               minWidth: MediaQuery.of(context).size.width,
               onPressed: (){
                signIn(emailController.text, passwordController.text);
               },
-              child: const Text("Login",
+              child: Text("Login",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
@@ -126,14 +125,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                         fit:BoxFit.contain,
                                         )
                                     ),
-                                    const SizedBox(height: 45),
+                                    SizedBox(height: 45),
 
                                     emailField,
-                                    const SizedBox(height: 25),
+                                    SizedBox(height: 25),
                                     passwordField,
-                                    const SizedBox(height: 35),
+                                    SizedBox(height: 35),
                                     loginButton,
-                                    const SizedBox(height: 15),
+                                    SizedBox(height: 15),
                                   ],
                               ),
                           ),
@@ -149,7 +148,7 @@ void signIn(String email,String password) async{
       await _auth.signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
             Fluttertoast.showToast(msg: "Login successful"),
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const HomeScreen())),
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> HomeScreen())),
       }).catchError((e){
         Fluttertoast.showToast(msg:e!.messasge);
       });

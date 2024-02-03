@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'dart:typed_data';
-import 'package:permission_handler/permission_handler.dart';
-
 
 class BlueScreen extends StatefulWidget {
   const BlueScreen({Key? key}) : super(key: key);
@@ -27,48 +25,17 @@ class _BlueScreenState extends State<BlueScreen> {
   }
 
   Future<void> _startScan() async {
-    // Request Bluetooth and location permissions
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.bluetooth,
-      Permission.location,
-    ].request();
+    setState(() {
+      _devices.clear(); // Clear existing devices before starting a new scan
+      _selectedDevice = null; // Clear selected device
+    });
 
-    if (statuses[Permission.bluetooth] == PermissionStatus.granted &&
-        statuses[Permission.location] == PermissionStatus.granted) {
-      // Permissions granted, start Bluetooth discovery
+    _bluetooth.startDiscovery().listen((device) {
       setState(() {
-        _devices.clear(); // Clear existing devices before starting a new scan
-        _selectedDevice = null; // Clear selected device
+        _devices.add(device);
       });
-
-      _bluetooth.startDiscovery().listen((device) {
-        setState(() {
-          _devices.add(device);
-        });
-      });
-    } else {
-      // Permissions not granted, inform the user
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Permission Denied'),
-            content: Text('Bluetooth and Location permissions are required for scanning devices.'),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    });
   }
-
-
 
   Future<void> _connectToDevice() async {
     if (_selectedDevice != null) {
