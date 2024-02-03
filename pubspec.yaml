@@ -47,6 +47,7 @@ dependencies:
   fluttertoast: ^8.2.4
   firebase_database: ^10.4.3
   permission_handler: 11.2.0
+  device_info_plus: ^9.0.2
 
 dev_dependencies:
   flutter_test:
