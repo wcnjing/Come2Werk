@@ -9,15 +9,7 @@ class BlueScreen extends StatefulWidget {
 
   @override
   _BlueScreenState createState() => _BlueScreenState();
-
 }
-
-
-
-
-
-
-
 
 class _BlueScreenState extends State<BlueScreen> {
   FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
