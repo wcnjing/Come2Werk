@@ -2,6 +2,8 @@ import 'package:come2werk_flutter/screens/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:come2werk_flutter/screens/MyBluetoothPage.dart';
 import 'package:come2werk_flutter/screens/MyAttendancePage.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -148,7 +150,3 @@ class SignOutButton extends StatelessWidget {
     );
   }
 }
-
-
-
-

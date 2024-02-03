@@ -3,15 +3,19 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,12 +23,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AttendanceScreen(),
+      home: const AttendanceScreen(),
     );
   }
 }
 
 class AttendanceScreen extends StatefulWidget {
+  const AttendanceScreen({super.key});
+
   @override
   _AttendanceScreenState createState() => _AttendanceScreenState();
 }
@@ -41,11 +47,11 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     super.initState();
     _selectedDate = DateTime.now();
     _focusedDay = DateTime.now();
-    _firstDay = DateTime.now().subtract(Duration(days: 30));
-    _lastDay = DateTime.now().add(Duration(days: 30));
+    _firstDay = DateTime.now().subtract(const Duration(days: 30));
+    _lastDay = DateTime.now().add(const Duration(days: 30));
 
-    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child('Attendance');
-    _testRef.onValue.listen((event) {
+    DatabaseReference testRef = FirebaseDatabase.instance.ref().child('Attendance');
+    testRef.onValue.listen((event) {
       try {
         DataSnapshot dataSnapshot = event.snapshot;
 
@@ -80,7 +86,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Attendance'),
+        title: const Text('Attendance'),
       ),
       body: Column(
         children: [
@@ -99,62 +105,62 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               });
             },
             calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
+              selectedDecoration: const BoxDecoration(
                 color: Colors.blueAccent, // Selected color
                 shape: BoxShape.circle,
               ),
-              todayDecoration: BoxDecoration(
+              todayDecoration: const BoxDecoration(
                 color: Colors.blue, // Today's color
                 shape: BoxShape.circle,
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Center(
             child: Text(
               'Selected Date: ${_selectedDate.toString().split(' ')[0]}', // Display date in 'YYYY-MM-DD' format
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               // Check if today's date is selected before allowing check-in
               if (isSameDay(_selectedDate, DateTime.now())) {
-                DatabaseReference _attendanceRef = FirebaseDatabase.instance.ref().child('Attendance');
-                _attendanceRef.child(_selectedDate.toString().split(' ')[0]).once().then((snapshot) {
+                DatabaseReference attendanceRef = FirebaseDatabase.instance.ref().child('Attendance');
+                attendanceRef.child(_selectedDate.toString().split(' ')[0]).once().then((snapshot) {
                   if (snapshot != null &&
                       snapshot.snapshot.value != null &&
                       (snapshot.snapshot.value as Map)['checkIn'] == true) {
                     // If the date is already checked in, remove it from both local set and Firebase
                     _highlightedDates.remove(_selectedDate.toLocal());
-                    _attendanceRef.child(_selectedDate.toString().split(' ')[0]).remove();
+                    attendanceRef.child(_selectedDate.toString().split(' ')[0]).remove();
                   } else {
                     // Show the dialog for Gantry selection
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Select Gantry'),
+                          title: const Text('Select Gantry'),
                           content: Column(
                             children: [
                               ElevatedButton(
                                 onPressed: () {
                                   handleGantrySelection('A');
                                 },
-                                child: Text('Gantry A'),
+                                child: const Text('Gantry A'),
                               ),
                               ElevatedButton(
                                 onPressed: () {
                                   handleGantrySelection('B');
                                 },
-                                child: Text('Gantry B'),
+                                child: const Text('Gantry B'),
                               ),
                               ElevatedButton(
                                 onPressed: () {
                                   handleGantrySelection('C');
                                 },
-                                child: Text('Gantry C'),
+                                child: const Text('Gantry C'),
                               ),
                             ],
                           ),
@@ -171,14 +177,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Invalid Date'),
-                      content: Text('You can only check in on today\'s date.'),
+                      title: const Text('Invalid Date'),
+                      content: const Text('You can only check in on today\'s date.'),
                       actions: [
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text('OK'),
+                          child: const Text('OK'),
                         ),
                       ],
                     );
@@ -186,27 +192,27 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 );
               }
             },
-            child: Text('Check In'),
+            child: const Text('Check In'),
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Card(
             elevation: 4,
-            margin: EdgeInsets.symmetric(horizontal: 16), // Adjust margin as needed
+            margin: const EdgeInsets.symmetric(horizontal: 16), // Adjust margin as needed
             color: Colors.white, // Set background color to white
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Center(
                 child: Column(
                   children: [
                     Text(
                       'Days clocked in: ${countHighlightedDays()}',
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Text(
                       'Days absent: ${countNonHighlightedDays()}',
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
@@ -222,8 +228,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     print('Selected Gantry: $gantry');
 
     // Add or update the check-in status in Firebase with the selected gantry
-    DatabaseReference _attendanceRef = FirebaseDatabase.instance.ref().child('Attendance');
-    _attendanceRef.child(_selectedDate.toString().split(' ')[0]).set({
+    DatabaseReference attendanceRef = FirebaseDatabase.instance.ref().child('Attendance');
+    attendanceRef.child(_selectedDate.toString().split(' ')[0]).set({
       'checkIn': true,
       'gantry': gantry,
     });
@@ -241,7 +247,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
 
     // Introduce a delay before showing the "Check-in successful" toast
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       // Show "Check-in successful" toast
       Fluttertoast.showToast(
         msg: 'Check-in successful',
