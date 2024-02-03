@@ -12,6 +12,7 @@ class BlueScreen extends StatefulWidget {
 class _BlueScreenState extends State<BlueScreen> {
   FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
   List<BluetoothDiscoveryResult> _devices = [];
+  BluetoothDiscoveryResult? _selectedDevice;
 
   @override
   void initState() {
@@ -21,13 +22,14 @@ class _BlueScreenState extends State<BlueScreen> {
 
   Future<void> _initBluetooth() async {
     await FlutterBluetoothSerial.instance.requestEnable();
-    _startScan();
   }
 
   Future<void> _startScan() async {
     setState(() {
       _devices.clear(); // Clear existing devices before starting a new scan
+      _selectedDevice = null; // Clear selected device
     });
+
     _bluetooth.startDiscovery().listen((device) {
       setState(() {
         _devices.add(device);
@@ -35,13 +37,16 @@ class _BlueScreenState extends State<BlueScreen> {
     });
   }
 
-  Future<void> _connectToDevice(BluetoothDiscoveryResult device) async {
-    try {
-      BluetoothConnection connection = await BluetoothConnection.toAddress(device.device.address);
-      print('Connected to ${device.device.name}');
-      // Now you can send or listen for data using _sendDataFromBluetooth or _listenForData functions
-    } catch (e) {
-      print('Error connecting to ${device.device.name}: $e');
+  Future<void> _connectToDevice() async {
+    if (_selectedDevice != null) {
+      try {
+        BluetoothConnection connection =
+        await BluetoothConnection.toAddress(_selectedDevice!.device.address);
+        print('Connected to ${_selectedDevice!.device.name}');
+        // Now you can send or listen for data using _sendDataFromBluetooth or _listenForData functions
+      } catch (e) {
+        print('Error connecting to ${_selectedDevice!.device.name}: $e');
+      }
     }
   }
 
@@ -68,7 +73,7 @@ class _BlueScreenState extends State<BlueScreen> {
       body: Column(
         children: [
           ElevatedButton(
-            onPressed: _startScan,
+            onPressed: () => _startScan().then((_) => _showDevicesDialog()),
             child: Text('Scan for Devices'),
           ),
           Expanded(
@@ -77,27 +82,46 @@ class _BlueScreenState extends State<BlueScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Text(_devices[index].device.name ?? 'Unknown Device'),
-                  onTap: () => _connectToDevice(_devices[index]),
+                  onTap: () {
+                    setState(() {
+                      _selectedDevice = _devices[index];
+                    });
+                    Navigator.pop(context); // Close the dialog
+                  },
                 );
               },
             ),
+          ),
+          ElevatedButton(
+            onPressed: _connectToDevice,
+            child: Text('Connect to Device'),
           ),
         ],
       ),
     );
   }
+
+  Future<void> _showDevicesDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Available Devices'),
+          content: Column(
+            children: _devices.map((device) {
+              return ListTile(
+                title: Text(device.device.name ?? 'Unknown Device'),
+                onTap: () {
+                  setState(() {
+                    _selectedDevice = device;
+                  });
+                  Navigator.pop(context); // Close the dialog
+                },
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
 }
-
-
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(
-//        title: Text('Connections'),
-//      ),
-//      body: Center(
-//        child: Text('This is the destination page!'),
-//      ),
-//    );
-//  }
-//}
