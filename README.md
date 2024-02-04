@@ -1,16 +1,11 @@
-# come2werk_flutter
+# Project Overview
 
-A new Flutter project.
+## What We Offer
+- Contactless Attendance taking: Contactless solution that encourages seamless attendance tracking, with as little disturbance to employees workflow.
+- 2 Factor Authentication: By using both an RFID chip and a bluetooth device, we have the means to implement 2FA to deter identity fraud.
+- Databases: Using the RFID system ensures our database has the capacity to be updated in real-time with precise locations and timings.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  ## Features
+  - Login: Added authentication, allow users to login to app
+  - Bluetooth: Connects phone to gantry via bluetooth connection
+  - Attendance: Allows user to track attendance and check in
